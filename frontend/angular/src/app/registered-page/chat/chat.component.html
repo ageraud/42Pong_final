@@ -1,0 +1,574 @@
+<body>
+  <!-- TOP -->
+  <div class="row top">
+    <div class="chat-pong">
+      <h4>
+        <span class="badge">Pong chat <i class="bi bi-chat"></i></span>
+      </h4>
+    </div>
+    <div class="container">
+      <nav class="navbar navbar-expand-lg">
+        <!-- TOP DROPDOWN -->
+        <div class="dropdown">
+          <button
+            class="btn btn-light btn-sm"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            (click)="onThreeDotsClick()"
+          >
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <!--View group rooms -->
+            <li *ngIf="listAllAvailableRooms.length > 0">
+              <a class="dropdown-item">View group rooms &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li>
+                  <div class="viewAllRooms">
+                    <span *ngFor="let room of listAllAvailableRooms">
+                      <span *ngIf="room.type !== 'private'">
+                        <div class="style-txt">
+                          {{ room.name }} - {{ room.type }}
+                          <br />
+                        </div>
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <!--Join a room-->
+            <li>
+              <a class="dropdown-item"> Join a room &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li>
+                  <input
+                    class="form-control"
+                    placeholder="Room name"
+                    id="room-name-join"
+                    type="room-btn"
+                  />
+                  <input
+                    class="form-control"
+                    id="room-password-join"
+                    placeholder="Password (if needed)"
+                    type="password"
+                  />
+                  <div class="style-txt">
+                    <input type="checkbox" (click)="hideJoinRoomPassword()" />
+                    Show password
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-secondary btn-sm btn-block"
+                    (click)="onJoinRoom()"
+                  >
+                    Submit
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <!--Create a room-->
+            <li>
+              <a class="dropdown-item"> Create a room &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li>
+                  <input
+                    class="form-control"
+                    id="room-name"
+                    placeholder="Room name"
+                    type="room-btn"
+                  />
+                  <input
+                    class="form-control"
+                    id="members"
+                    placeholder="member1,member2,..."
+                    type="room-btn"
+                  />
+                  <input
+                    class="form-control"
+                    id="password"
+                    placeholder="Password (optional)"
+                    type="password"
+                  />
+                  <div class="style-txt">
+                    <input type="checkbox" (click)="hideCreateRoomPassword()" />
+                    Show password
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="btn btn-secondary btn-sm btn-block"
+                    (click)="onCreateRoom()"
+                  >
+                    Submit
+                  </button>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="form-inline">
+          <input
+            class="form-control mr-sm-2"
+            type="search-someone"
+            placeholder="Chat and play !"
+            aria-label="Search"
+            id="search-user"
+            list="user-list"
+          />
+          <datalist id="user-list">
+            <option *ngFor="let user of users">
+              <span *ngIf="user !== login">{{ user }}</span>
+            </option>
+          </datalist>
+          <button
+            class="btn btn-outline-light my-2 my-sm-0"
+            type="button"
+            (click)="onSelectOneToOneUserConv()"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </nav>
+    </div>
+    <div class="list-conv">
+      <div id="plist" class="people-list">
+        <ul class="list-unstyled chat-list mt-2 mb-0">
+          <div class="conversations" *ngFor="let conversation of listConv">
+            <li class="clearfix clearfix-over-yellow">
+              <img src="{{ conversation.avatar }}" alt="avatar" />
+              <div class="about">
+                <button
+                  class="name color-conv-name"
+                  (click)="onSelectConv(conversation.conv_id)"
+                >
+                  {{ conversation.name }}
+                </button>
+                <div class="status">
+                  <i class="fa fa-circle online"></i>
+                  {{ conversation.type }} room
+                </div>
+              </div>
+            </li>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- BOTTOM -->
+  <div class="row bottom">
+    <div class="b-conv-name">
+      <div class="chat">
+        <div class="container">
+          <nav class="navbar navbar-expand-lg" id="header-conv-nav">
+            <span *ngIf="currentConv.members.length > 0; else noConvSelected">
+              <!-- BOTTOM DROPDOWN -->
+              <div class="dropdown">
+                <button
+                  class="btn btn-light btn-sm"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <!--View members-->
+                  <li>
+                    <a class="dropdown-item">View members &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <div class="viewMembersRoom">
+                          <span *ngFor="let member of membersPseudo">
+                            <div class="style-txt">
+                              {{ member.login }} / {{ member.pseudo }}
+                              <br />
+                            </div>
+                          </span>
+                          <a
+                            class="btn btn-secondary btn-sm btn-block"
+                            id="view-member"
+                            role="button"
+                            routerLink="profile/my-friends"
+                            >View profiles
+                          </a>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Add Admin-->
+                  <li
+                    *ngIf="
+                      currentRole === 'owner' && currentConv.type !== 'private'
+                    "
+                  >
+                    <a class="dropdown-item"> Add new admin &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          placeholder="Name"
+                          id="add-new-admin"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onNewAdmin()"
+                        >
+                          Add new admin
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Add friend-->
+                  <li *ngIf="currentConv.type !== 'private'">
+                    <a class="dropdown-item"> Add new friend &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          placeholder="Name"
+                          id="add-friend"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onAddFriend()"
+                        >
+                          Add
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Change password-->
+                  <li
+                    *ngIf="
+                      currentRole === 'owner' && currentConv.type !== 'private'
+                    "
+                  >
+                    <a class="dropdown-item"> Change password &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          placeholder="New password"
+                          id="change-password"
+                          type="password"
+                        />
+                        <div class="style-txt">
+                          <input
+                            type="checkbox"
+                            (click)="hideRoomNewPassword()"
+                          />
+                          Show password
+                        </div>
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onChangePassword()"
+                        >
+                          Change
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!-- Invite to play -->
+                  <li *ngIf="currentConv.type === 'private'">
+                    <a class="dropdown-item"> Invite to play &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <button
+                          *ngFor="let set of sets"
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onInvitToPlay(set.type)"
+                        >
+                          {{ set.type }}
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Mute-->
+                  <li
+                    *ngIf="
+                      currentConv.type === 'private' ||
+                      (currentConv.type !== 'private' &&
+                        currentRole !== 'chatter')
+                    "
+                  >
+                    <a class="dropdown-item"> Mute &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          id="mute-room"
+                          placeholder="Name"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onMute()"
+                        >
+                          Mute
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <li
+                    *ngIf="
+                      currentConv.type === 'private' ||
+                      (currentConv.type !== 'private' &&
+                        currentRole !== 'chatter')
+                    "
+                  >
+                    <a class="dropdown-item"> Unmute &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          id="unmute-room"
+                          placeholder="Name"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onUnmute()"
+                        >
+                          Unmute
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Kick-->
+                  <li
+                    *ngIf="
+                      currentRole !== 'chatter' &&
+                      currentConv.type !== 'private'
+                    "
+                  >
+                    <a class="dropdown-item"> Kick &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          id="kick-room"
+                          placeholder="Name"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onKick()"
+                        >
+                          Kick
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Ban-->
+                  <li
+                    *ngIf="
+                      currentRole !== 'chatter' &&
+                      currentConv.type !== 'private'
+                    "
+                  >
+                    <a class="dropdown-item"> Ban &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <input
+                          class="form-control"
+                          id="ban-room"
+                          placeholder="Name"
+                          type="room-btn"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onBan()"
+                        >
+                          Ban
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                  <!--Leave-->
+                  <li>
+                    <a class="dropdown-item"> Leave &raquo; </a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                      <li>
+                        <button
+                          type="submit"
+                          class="btn btn-secondary btn-sm btn-block"
+                          (click)="onLeave()"
+                        >
+                          Leave the room
+                        </button>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </span>
+            <ng-template #noConvSelected>
+              <div class="dropdown">
+                <button
+                  class="btn btn-light btn-sm"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <!--Please select a conversation-->
+                  <li>
+                    <a class="dropdown-item">Please select a conversation </a>
+                  </li>
+                </ul>
+              </div>
+            </ng-template>
+            <!-- Current Infos Conv -->
+            <div class="chat-header clearfix">
+              <span *ngIf="currentConv.avatar">
+                <img src="{{ currentConv.avatar }}" alt="avatar" />
+              </span>
+            </div>
+            <div class="chat-about">
+              <h6 class="m-b-0">{{ currentConv.name }}</h6>
+              <span *ngIf="currentConv.members.length > 0">
+                <span class="badge badge-pill badge-warning">{{
+                  currentConv.members.length
+                }}</span>
+              </span>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="b-messages">
+      <div class="chat">
+        <div class="chat-history">
+          <ul class="m-b-0">
+            <div class="messages" *ngFor="let message of convMessages">
+              <!-- if global.login is emitter, print on right -->
+              <!-- <div *ngIf="message.avatar !== 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLoHISAbaLunfRgJ2FHPtFsHUIPa5iC66eZwBK7uc8KgzpMzuDh3cPA4CfXz8mIQlpOpM&usqp=CAU'; else errorMessage"> -->
+              <span *ngIf="login === message.login; else leftMessages">
+                <li class="clearfix">
+                  <div class="message-data text-right">
+                    <!-- new wrap for right-chatter infos -->
+                    <div class="right-chatter-wrap">
+                      <div class="wrapper">
+                        <span class="message-data-time"
+                          >{{ message.pseudo }}
+                          <span class="badge badge-pill badge-info">{{
+                            message.role
+                          }}</span>
+                        </span>
+                        <span class="message-data-time">{{
+                          message.date | date: "short"
+                        }}</span>
+                      </div>
+                      <img src="{{ message.avatar }}" alt="Play Pong" />
+                    </div>
+                  </div>
+                  <!-- end of new wrap for right-chatter infos -->
+                  <div class="message other-message float-right">
+                    {{ message.content }}
+                  </div>
+                  <div
+                    *ngIf="message.invitation === true"
+                    class="message other-message float-right"
+                  >
+                    <!-- <p>You have sent an invitation!</p> -->
+                    <a class="cancel" (click)="onCancelToPlay()">Cancel</a>
+                  </div>
+                </li>
+              </span>
+              <!-- else, print on left -->
+              <ng-template #leftMessages>
+                <li class="clearfix">
+                  <div class="message-data text-left">
+                    <!-- new wrap for left-chatter infos -->
+                    <div class="left-chatter-wrap">
+                      <img src="{{ message.avatar }}" alt="avatar" />
+                      <div class="wrapper">
+                        <span class="message-data-time"
+                          >{{ message.pseudo }}
+                          <span class="badge badge-pill badge-info">{{
+                            message.role
+                          }}</span>
+                        </span>
+                        <span class="message-data-time">{{
+                          message.date | date: "short"
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="message other-message float-left">
+                    {{ message.content }}
+                  </div>
+                  <div
+                    *ngIf="message.invitation === true"
+                    class="message other-message float-left"
+                  >
+                    <!-- <p>You have received an invitation!</p> -->
+                    <a class="accept" (click)="onAcceptToPlay()">Accept&nbsp;</a>
+                    <a class="cancel" (click)="onCancelToPlay()">&nbsp;Decline</a>
+                  </div>
+                </li>
+              </ng-template>
+              <!-- </div> -->
+              <!-- <ng-template #errorMessage class="message other-message float-right">
+                <span class="badge bg-warning text-dark">{{ message.content }}</span>
+              </ng-template> -->
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="b-typing">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Type a message..."
+          id="input-message"
+          (keyup)="keyUpEnter($event)"
+        />
+        <div class="input-group-prepend">
+          <span *ngIf="!currentConv.name; else okToSendMessage">
+            <button
+              type="button"
+              class="btn btn-outline-light rounded"
+              disabled
+            >
+              <i class="fa fa-send"></i>
+            </button>
+          </span>
+          <ng-template #okToSendMessage>
+            <button
+              type="button"
+              class="btn btn-outline-light rounded"
+              (click)="onSendMessage()"
+            >
+              <i class="fa fa-send"></i>
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

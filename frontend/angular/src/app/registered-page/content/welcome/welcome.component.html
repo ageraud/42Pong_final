@@ -1,0 +1,17 @@
+<div *ngIf="status" class="alert alert-success" role="alert">
+    Welcome ! You have successfully logged in !
+</div>    
+
+<div *ngIf="!status" class="alert alert-danger" role="alert">
+    Oh, oh... Something went wrong ! There is no connexion.
+</div>
+<br>
+<br>
+<br>
+<br>
+<img *ngIf="global.login === 'rlepart'" src="../../../../assets/fuck-docker.png" class="mx-auto d-block" style="border-radius: 12px; width: 80%;" alt="...">
+<img *ngIf="global.login !== 'rlepart'" src="../../../../assets/Welcome.png" class="mx-auto d-block" style="border-radius: 12px; width: 80%;" alt="...">
+
+<div class="team">
+    <small><p><em>Ⓒ Transcendence dreamteam, made by 42 students : ageraud, jobenass, pgoudet, rlepart, sad-aude</em></p></small>
+</div>

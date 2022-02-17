@@ -1,0 +1,40 @@
+<header>
+  <div class="test container">
+    <div class="flex-grid">
+      <div class="d-flex justify-content-center align-items-center">
+        <img
+          *ngIf="global.allUserAvatar.has(userService.user.login)"
+          class="rounded-circle"
+          alt="{{ userService.user.login }}"
+          src="{{ global.allUserAvatar.get(userService.user.login) }}"
+        />
+        <img
+          *ngIf="!global.allUserAvatar.has(userService.user.login)"
+          class="rounded-circle"
+          alt="{{ userService.user.login }}"
+          src="{{ userService.user.avatar }}"
+        />
+      </div>
+      <div>
+        <h3>login</h3>
+        <p>{{ userService.user.login }}</p>
+      </div>
+      <div>
+        <h3>pseudo</h3>
+          <p *ngIf="global.allUserPseudo.has(userService.user.login)">{{ global.allUserPseudo.get(userService.user.login) }}</p>
+          <p *ngIf="!global.allUserPseudo.has(userService.user.login)">{{ userService.user.pseudo }}</p>
+      </div>
+      <div>
+        <h3>points</h3>
+        <p>{{ userService.user.points_for_ladder }} pts</p>
+      </div>
+      <div>
+        <h3>rank</h3>
+        <p *ngIf="userService.user.ranking % 10 === 1 && userService.user.ranking % 100 !== 11" >{{ userService.user.ranking }}st</p>
+        <p *ngIf="userService.user.ranking % 10 === 2 && userService.user.ranking % 100 !== 12" >{{ userService.user.ranking }}nd</p>
+        <p *ngIf="userService.user.ranking % 10 === 3 && userService.user.ranking % 100 !== 13" >{{ userService.user.ranking }}rd</p>
+        <p *ngIf="userService.user.ranking % 10 !== 1 && userService.user.ranking % 10 !== 2 && userService.user.ranking % 10 !== 3 || userService.user.ranking % 100 === 11 || userService.user.ranking % 100 === 12 || userService.user.ranking % 100 === 13" >{{ userService.user.ranking }}th</p>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,42 @@
+app-header {
+  flex: 1;
+  padding: 0px;
+}
+
+.right-col {
+  flex: 40%;
+  /* background-color: rgb(249, 125, 100); */
+  
+  /* Temporary */
+  background-color: #F9C53F;
+  border: 4px solid #F9C53F;
+  border-radius: 5px;
+
+  /* To not have the cut sidebar anymore */
+  /* Maybe have to play on it on the @media */
+  /* overflow-y: auto; */
+  /* overflow-x: unset; */
+}
+
+.left-col {
+  flex: 60%;
+}
+
+.col {
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+}
+
+.middle {
+  height: 100%;
+}
+
+.row {
+  margin-left: 0%;
+  margin-right: 0%;
+}

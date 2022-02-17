@@ -1,0 +1,50 @@
+<h1>My statistics</h1>
+<br>
+<h4>Games history</h4>
+<br>
+<p class="count">You have already played <span class="badge badge-warning">{{size}}</span> games</p>
+<div class="list">
+	<li class="item" *ngFor="let match of matches">
+		<div class="player1">
+			<img *ngIf="global.allUserAvatar.has(match.player1.login)" class="avatar_p1" alt="{{ match.player1.login }}" src="{{ global.allUserAvatar.get(match.player1.login) }}">
+			<img *ngIf="!global.allUserAvatar.has(match.player1.login)" class="avatar_p1" alt="{{ match.player1.login }}" src="{{ match.player1.avatar }}">
+			<p *ngIf="global.allUserPseudo.has(match.player1.login)" class="pseudo_p1">{{ global.allUserPseudo.get(match.player1.login) }}</p>
+			<p *ngIf="!global.allUserPseudo.has(match.player1.login)" class="pseudo_p1">{{ match.player1.pseudo }}</p>
+			<p [ngClass]="{'win': match.winner === profile,
+						'lost': match.looser === profile}" class="score_p1">{{ match.player1_score }}</p>
+		</div>
+		<p class="versus">VS</p>
+		<div class="player2">
+			<p [ngClass]="{'win': match.winner !== profile,
+						'lost': match.looser !== profile}" class="score_p2">{{ match.player2_score }}</p>
+			<p *ngIf="global.allUserPseudo.has(match.player2.login)" class="pseudo_p2">{{ global.allUserPseudo.get(match.player2.login) }}</p>
+			<p *ngIf="!global.allUserPseudo.has(match.player2.login)" class="pseudo_p2">{{ match.player2.pseudo }}</p>
+			<img *ngIf="global.allUserAvatar.has(match.player2.login)" class="avatar_p2" alt="{{ match.player2.login }}" src="{{ global.allUserAvatar.get(match.player2.login) }}">
+			<img *ngIf="!global.allUserAvatar.has(match.player2.login)" class="avatar_p2" alt="{{ match.player2.login }}" src="{{ match.player2.avatar }}">
+		</div>
+	</li>
+</div>
+<br>
+<br>
+<br>
+<h4 *ngIf="stats">More statistics</h4>
+<br>
+<div *ngIf="stats" class="bloc">
+    <p class="title">Number of victories :</p>
+    <h4 class="data">{{ stats.victory }} / {{ stats.match_number }}</h4>
+	<br>
+    <p class="title">Number of defeats :</p>
+    <h4 class="data">{{ stats.loss }} / {{ stats.match_number }}</h4>
+	<br>
+    <p class="title">Scored points :</p>
+    <h4 class="data">{{ stats.scored_points }}</h4>
+	<br>
+    <p class="title">Adversary points :</p>
+    <h4 class="data">{{ stats.adversary_points }}</h4>
+	<br>
+    <p class="title">Number of hit balls :</p>
+    <h4 class="data">{{ stats.ball_hit }}</h4>
+	<br>
+    <!-- <p *ngIf="stats.match_number > 0 && stats.loss > 0" class="title">Ratio :</p> -->
+    <!-- <p *ngIf="stats.match_number > 0 && stats.loss > 0" class="data">{{ ratio }}</p> -->
+</div>
