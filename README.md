@@ -17,6 +17,8 @@ To launch the app
 To shut down  
 `sh clean.sh`
 
+Preview
+![42Pong_agathe_geraud](https://user-images.githubusercontent.com/56353386/154440050-27dc19f1-3105-4060-a996-b01cbee4bf9d.png)
 
 *Colors*
 Rose saumon : #F97D64, rgb(249,125,100)
